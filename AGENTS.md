@@ -99,8 +99,8 @@ npm.cmd start                 # proxy /health y /actuator → localhost:8080
 - Builder moderno (`@angular/build:application`), sin Karma: los specs usan
   `TestBed` + `HttpTestingController` con URL relativa `/health`.
 - Los tests de frontend no arrancan el backend; mockean `/health`.
-- `ng` puede añadir `cli.analytics` (UUID de máquina) a `angular.json`: revierte
-  ese cambio antes de commitear.
+- El repo fija `cli.analytics: false` en `angular.json`. No lo cambies: si `ng`
+  inyecta un UUID de máquina ahí, revierte ese valor antes de commitear.
 
 ## Convenciones
 
