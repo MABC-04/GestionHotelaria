@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:reservas="http://www.hotel.com/pms/reservas">
+  <reservas:Propiedad id="00000000-0000-0000-0000-000000000001" nombre="Hotel Andino" horaCheckIn="15:00" horaCheckOut="12:00" horaLimiteSinGarantia="18:00" horaLimiteLlegada="18:00" fechaOperativa="2026-01-05" tiposHabitacion="/1 /2" habitaciones="/3 /4 /5 /6"/>
+  <reservas:TipoHabitacion id="00000000-0000-0000-0000-000000000101" codigo="DOBLE" nombre="Habitaci&#xf3;n doble" capacidadNinos="1" descripcion="Cama queen y ba&#xf1;o privado" propiedad="/0" habitaciones="/3 /4" tarifas="/10" retenciones="/92"/>
+  <reservas:TipoHabitacion id="00000000-0000-0000-0000-000000000102" codigo="SUITE" nombre="Suite" capacidadAdultos="3" capacidadNinos="2" descripcion="Dos ambientes con sala" propiedad="/0" habitaciones="/5 /6" tarifas="/41"/>
+  <reservas:Habitacion id="00000000-0000-0000-0000-000000000201" numero="101" piso="1" tipo="/1" propiedad="/0" lineasReserva="/83 /88"/>
+  <reservas:Habitacion id="00000000-0000-0000-0000-000000000202" numero="102" piso="1" tipo="/1" propiedad="/0" lineasReserva="/84 /91"/>
+  <reservas:Habitacion id="00000000-0000-0000-0000-000000000203" numero="201" piso="2" tipo="/2" propiedad="/0"/>
+  <reservas:Habitacion id="00000000-0000-0000-0000-000000000204" numero="202" piso="2" estadoLimpieza="INSPECCIONADA" tipo="/2" propiedad="/0"/>
+  <reservas:PoliticaCancelacion id="00000000-0000-0000-0000-000000000301" codigo="FLEXIBLE" horasLimite="48" reembolsable="true" tarifas="/41"/>
+  <reservas:PoliticaCancelacion id="00000000-0000-0000-0000-000000000302" codigo="MODERADA" horasLimite="48" cargoNoches="1" reembolsable="true" tarifas="/10"/>
+  <reservas:PoliticaCancelacion id="00000000-0000-0000-0000-000000000303" codigo="NO_REEMBOLSABLE" cargoPorcentaje="100"/>
+  <reservas:Tarifa id="00000000-0000-0000-0000-000000000401" codigo="TAR-DOBLE-2026" nombre="Doble 2026" vigenciaInicio="2026-01-01" vigenciaFin="2026-12-31" tipoHabitacion="/1" politicaCancelacion="/8" lineas="/83 /84 /88 /91">
+    <precios href="#/11"/>
+    <precios href="#/12"/>
+    <precios href="#/13"/>
+    <precios href="#/14"/>
+    <precios href="#/15"/>
+    <precios href="#/16"/>
+    <precios href="#/17"/>
+    <precios href="#/18"/>
+    <precios href="#/19"/>
+    <precios href="#/20"/>
+    <precios href="#/21"/>
+    <precios href="#/22"/>
+    <precios href="#/23"/>
+    <precios href="#/24"/>
+    <precios href="#/25"/>
+    <precios href="#/26"/>
+    <precios href="#/27"/>
+    <precios href="#/28"/>
+    <precios href="#/29"/>
+    <precios href="#/30"/>
+    <precios href="#/31"/>
+    <precios href="#/32"/>
+    <precios href="#/33"/>
+    <precios href="#/34"/>
+    <precios href="#/35"/>
+    <precios href="#/36"/>
+    <precios href="#/37"/>
+    <precios href="#/38"/>
+    <precios href="#/39"/>
+    <precios href="#/40"/>
+  </reservas:Tarifa>
+  <reservas:PrecioNoche id="1edd34cb-8c3a-3fa9-bd5a-fd613c13752f" fecha="2026-01-01" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="fb652c7b-2d47-3c6c-b5e7-59e424b5bd76" fecha="2026-01-02" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="624d506e-a074-3264-8b75-da95d97d73b5" fecha="2026-01-03" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="e426e6df-f9ce-346c-b1f4-4ef6b8732d06" fecha="2026-01-04" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="66eabc0e-f069-32fb-b107-d4d2c99dcf35" fecha="2026-01-05" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="33ad4060-15eb-3972-8906-aa9a6d70ff29" fecha="2026-01-06" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="6d8dc5c8-8ddd-3890-b0cd-729f00482540" fecha="2026-01-07" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="355629da-e54d-3ec9-845e-21240fa289ec" fecha="2026-01-08" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="a24f9039-d59e-368c-86ec-2c6657b28aca" fecha="2026-01-09" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="63e13db5-4629-37e6-aa40-5269476b08b8" fecha="2026-01-10" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="aac907b0-d47c-31d5-b2e5-b5dfe795d03b" fecha="2026-01-11" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="f2e49c67-7b65-3105-a7a5-3271f87dcca9" fecha="2026-01-12" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="83d921e5-69d4-3c23-bdea-ffe1da0afa6d" fecha="2026-01-13" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="f074d9a6-f153-376f-aaca-b470bbb847bd" fecha="2026-01-14" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="4e9f30d0-630a-3419-93c6-ec5939da2192" fecha="2026-01-15" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="45d7a48e-4da3-338b-9288-c8d747ff1fa5" fecha="2026-01-16" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="a0534ffd-4037-3cc8-af16-fa600d1f9fed" fecha="2026-01-17" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="fda4e058-3153-3618-8234-cfde1f41668c" fecha="2026-01-18" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="ec39cbc6-7eaf-377e-9893-4adffe929b51" fecha="2026-01-19" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="a91f468f-a0f4-3d54-afb5-8ffac751994a" fecha="2026-01-20" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="6f630fef-5288-341f-bf75-35a6c8503f16" fecha="2026-01-21" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="b2fc32de-761d-37a5-b78b-d11eab84096e" fecha="2026-01-22" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="8cf4cd5b-507c-3358-b8ce-6829a236d2bf" fecha="2026-01-23" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="8289089a-3fcd-38b8-a5d3-5d49fbe79b55" fecha="2026-01-24" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="77123599-0aa5-3289-a9cb-46f0fd6f05db" fecha="2026-01-25" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="0af32313-3051-35cf-b0d1-c3c26dd07057" fecha="2026-01-26" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="5c55d4e0-df7f-3b3b-ac1f-baa1eb630d07" fecha="2026-01-27" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="747b93ce-e21a-35dc-bfe5-0d937feb5ea5" fecha="2026-01-28" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="a35e24dd-cf12-31bd-9374-cc0e8ddbff78" fecha="2026-01-29" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="e15310c6-c69f-35a4-a0dd-4b8fd7a522ed" fecha="2026-01-30" monto="100.00" impuestoPorcentaje="16">
+    <tarifa href="#/10"/>
+  </reservas:PrecioNoche>
+  <reservas:Tarifa id="00000000-0000-0000-0000-000000000402" codigo="TAR-SUITE-2026" nombre="Suite 2026" plan="DESAYUNO" vigenciaInicio="2026-01-01" vigenciaFin="2026-12-31" tipoHabitacion="/2" politicaCancelacion="/7">
+    <precios href="#/42"/>
+    <precios href="#/43"/>
+    <precios href="#/44"/>
+    <precios href="#/45"/>
+    <precios href="#/46"/>
+    <precios href="#/47"/>
+    <precios href="#/48"/>
+    <precios href="#/49"/>
+    <precios href="#/50"/>
+    <precios href="#/51"/>
+    <precios href="#/52"/>
+    <precios href="#/53"/>
+    <precios href="#/54"/>
+    <precios href="#/55"/>
+    <precios href="#/56"/>
+    <precios href="#/57"/>
+    <precios href="#/58"/>
+    <precios href="#/59"/>
+    <precios href="#/60"/>
+    <precios href="#/61"/>
+    <precios href="#/62"/>
+    <precios href="#/63"/>
+    <precios href="#/64"/>
+    <precios href="#/65"/>
+    <precios href="#/66"/>
+    <precios href="#/67"/>
+    <precios href="#/68"/>
+    <precios href="#/69"/>
+    <precios href="#/70"/>
+    <precios href="#/71"/>
+  </reservas:Tarifa>
+  <reservas:PrecioNoche id="4adad2e8-a2cb-3a9e-92fa-e0262daead6f" fecha="2026-01-01" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="fcefcd2b-6340-39db-8dbd-74a7fca92d2b" fecha="2026-01-02" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="8c247345-0f71-3a4d-ad1e-5ddd8060d850" fecha="2026-01-03" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="877e16cc-d531-3113-8e60-9145575f05e6" fecha="2026-01-04" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="eaf82acd-8239-3a2f-afb5-c20d26867a0b" fecha="2026-01-05" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="92bed6a8-b35b-304c-92f4-d5bb376412e7" fecha="2026-01-06" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="95c84a53-14f1-314b-b1b8-79f97bced540" fecha="2026-01-07" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="1292970b-1eb2-3d77-b9ed-cbb77c10a771" fecha="2026-01-08" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="f48e87ee-b800-339e-ad45-b59cabd4b9c0" fecha="2026-01-09" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="8c8b74b8-f01a-3922-a5a0-eb681ebbee26" fecha="2026-01-10" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="5a0d9639-8899-3725-ae2d-78a72d297876" fecha="2026-01-11" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="db72bba7-d5a0-313b-bbf7-71aeace16899" fecha="2026-01-12" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="819f3bb7-d486-3a8f-a1b1-6447e6b9b519" fecha="2026-01-13" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="8e422db2-3bf0-330e-be23-98db06db9734" fecha="2026-01-14" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="3ef8d166-a330-3b5f-99a4-96aaf652f8cb" fecha="2026-01-15" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="4f1dc4fe-06a1-3a30-8603-348a6555b12e" fecha="2026-01-16" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="3b41018c-e9e8-38bc-922d-74a003e6168f" fecha="2026-01-17" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="2c78cd64-4a8b-3079-a554-56d413111217" fecha="2026-01-18" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="5d519df9-c37d-3d18-a8a1-672fde645243" fecha="2026-01-19" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="71478037-d4d8-3bc4-a2f6-3c6355537482" fecha="2026-01-20" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="7e9733db-521b-3d22-9f73-56caf44b91de" fecha="2026-01-21" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="65c947de-26cc-3c6d-9f80-90151346d79e" fecha="2026-01-22" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="94904c39-7ab5-37dc-9122-6c31c6e67dbe" fecha="2026-01-23" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="13b6a81b-e4c9-3276-8955-2dd37516727b" fecha="2026-01-24" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="af1feb93-3f1c-3813-b210-3bbdc929bc5b" fecha="2026-01-25" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="3a227bc7-0319-399c-930c-07b0159512e6" fecha="2026-01-26" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="1aa0eeac-d2de-3df3-ad7e-cba9ffa172a4" fecha="2026-01-27" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="ff1cafc4-e29e-3809-826e-9ef3e3203098" fecha="2026-01-28" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="3be9f9c1-a3e9-3a47-8860-dd4d688b5a5d" fecha="2026-01-29" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:PrecioNoche id="efb31074-9cea-3cbb-a1dd-03994b3a6ddb" fecha="2026-01-30" monto="150.00" impuestoPorcentaje="16">
+    <tarifa href="#/41"/>
+  </reservas:PrecioNoche>
+  <reservas:Canal id="00000000-0000-0000-0000-000000000501" nombre="Directo" reservas="/82 /90"/>
+  <reservas:Canal id="00000000-0000-0000-0000-000000000502" nombre="Sitio web" tipo="WEB" comisionPorcentaje="15" reservas="/87"/>
+  <reservas:Canal id="00000000-0000-0000-0000-000000000503" nombre="OTA" tipo="OTA" comisionPorcentaje="18"/>
+  <reservas:Huesped id="00000000-0000-0000-0000-000000000601" nombre="Ana Torres" correo="ana@example.com" telefono="+593900000001" documento="1712345678" consentimientoDatos="true" fechaConsentimiento="2025-06-01" datosPersonales="true" reservas="/82"/>
+  <reservas:Huesped id="00000000-0000-0000-0000-000000000602" nombre="Luis P&#xe9;rez" correo="luis@example.com" telefono="+593900000002" documento="1712345678" consentimientoDatos="true" fechaConsentimiento="2025-06-01" datosPersonales="true" reservas="/87"/>
+  <reservas:Huesped id="00000000-0000-0000-0000-000000000603" nombre="Marta Ruiz" correo="marta@example.com" telefono="+593900000003" documento="1712345678" consentimientoDatos="true" fechaConsentimiento="2025-06-01" datosPersonales="true" reservas="/90"/>
+  <reservas:Rol id="00000000-0000-0000-0000-000000000701" nombre="GERENTE" usuarios="/80">
+    <permisos>DESCUENTO_APROBAR</permisos>
+    <permisos>EXCEPCION_CIERRE</permisos>
+    <permisos>OVERBOOKING_HABILITAR</permisos>
+    <permisos>REPORTE_VER</permisos>
+    <permisos>RESERVA_CANCELAR</permisos>
+    <permisos>RESERVA_CREAR</permisos>
+    <permisos>RESERVA_MODIFICAR</permisos>
+  </reservas:Rol>
+  <reservas:Rol id="00000000-0000-0000-0000-000000000702" nombre="RECEPCION" usuarios="/81">
+    <permisos>RESERVA_CREAR</permisos>
+    <permisos>RESERVA_MODIFICAR</permisos>
+    <permisos>RESERVA_CANCELAR</permisos>
+    <permisos>CHECKIN_REALIZAR</permisos>
+    <permisos>CHECKOUT_REALIZAR</permisos>
+  </reservas:Rol>
+  <reservas:Usuario id="00000000-0000-0000-0000-000000000801" nombreUsuario="gerente" correo="gerente@hotel.com" rol="/78"/>
+  <reservas:Usuario id="00000000-0000-0000-0000-000000000802" nombreUsuario="recepcion" correo="recepcion@hotel.com" rol="/79" bitacoras="/86" reservasModificadas="/82"/>
+  <reservas:Reserva id="00000000-0000-0000-0000-000000000901" codigoConfirmacion="AB12CD34" fechaEntrada="2026-01-10" fechaSalida="2026-01-12" adultos="2" estado="CONFIRMADA" total="400.00" creadaEn="2026-01-02T10:00" modificadaEn="2026-01-04T11:00" horaLimiteLlegada="18:00" propiedad="/0" titular="/75" canal="/72" politicaCancelacion="/8" garantia="/85" modificadaPor="/81">
+    <lineas href="#/83"/>
+    <lineas href="#/84"/>
+  </reservas:Reserva>
+  <reservas:ReservaHabitacion id="00000000-0000-0000-0000-000000001001" fechaEntrada="2026-01-10" fechaSalida="2026-01-12" precioTotal="200.00" habitacion="/3" tipoHabitacion="/1" tarifa="/10">
+    <reserva href="#/82"/>
+  </reservas:ReservaHabitacion>
+  <reservas:ReservaHabitacion id="00000000-0000-0000-0000-000000001002" fechaEntrada="2026-01-10" fechaSalida="2026-01-12" precioTotal="200.00" habitacion="/4" tipoHabitacion="/1" tarifa="/10">
+    <reserva href="#/82"/>
+  </reservas:ReservaHabitacion>
+  <reservas:Garantia id="00000000-0000-0000-0000-000000001101" monto="400.00" referencia="REF-TARJETA" autorizadaEn="2026-01-02T10:05" reserva="/82"/>
+  <reservas:Bitacora id="00000000-0000-0000-0000-000000001301" entidad="Reserva" entidadId="00000000-0000-0000-0000-000000000901" campo="total" valorAnterior="390.00" valorNuevo="400.00" accion="MODIFICAR" fecha="2026-01-04T11:00" usuario="/81"/>
+  <reservas:Reserva id="00000000-0000-0000-0000-000000000902" codigoConfirmacion="EF56GH78" fechaEntrada="2026-01-11" fechaSalida="2026-01-13" adultos="2" estado="CONFIRMADA" descuentoPorcentaje="20" total="160.00" creadaEn="2026-01-03T09:00" horaLimiteLlegada="18:00" propiedad="/0" titular="/76" canal="/73" politicaCancelacion="/8" garantia="/89">
+    <lineas href="#/88"/>
+  </reservas:Reserva>
+  <reservas:ReservaHabitacion id="00000000-0000-0000-0000-000000001003" fechaEntrada="2026-01-11" fechaSalida="2026-01-13" precioTotal="200.00" habitacion="/3" tipoHabitacion="/1" tarifa="/10">
+    <reserva href="#/87"/>
+  </reservas:ReservaHabitacion>
+  <reservas:Garantia id="00000000-0000-0000-0000-000000001102" tipo="DEPOSITO" monto="160.00" referencia="REF-DEPOSITO" autorizadaEn="2026-01-03T09:15" reserva="/87"/>
+  <reservas:Reserva id="00000000-0000-0000-0000-000000000903" codigoConfirmacion="IJ90KL12" fechaEntrada="2026-01-20" fechaSalida="2026-01-22" adultos="2" total="200.00" creadaEn="2026-01-05T08:00" horaLimiteLlegada="18:00" propiedad="/0" titular="/77" canal="/72" politicaCancelacion="/7" retencion="/92">
+    <lineas href="#/91"/>
+  </reservas:Reserva>
+  <reservas:ReservaHabitacion id="00000000-0000-0000-0000-000000001004" fechaEntrada="2026-01-20" fechaSalida="2026-01-22" precioTotal="200.00" habitacion="/4" tipoHabitacion="/1" tarifa="/10">
+    <reserva href="#/90"/>
+  </reservas:ReservaHabitacion>
+  <reservas:RetencionInventario id="00000000-0000-0000-0000-000000001201" fechaEntrada="2026-01-20" fechaSalida="2026-01-22" creadaEn="2026-01-05T08:00" expiraEn="2026-01-05T08:10" tokenSesion="sesion-marta" tipoHabitacion="/1" reserva="/90"/>
+</xmi:XMI>

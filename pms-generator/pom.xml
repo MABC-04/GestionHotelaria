@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.hotel.pms</groupId>
+        <artifactId>pms-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>pms-generator</artifactId>
+    <name>PMS — Generador</name>
+    <description>Generación automática de la matriz de trazabilidad a partir del catálogo OCL</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.hotel.pms</groupId>
+            <artifactId>pms-model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <!-- La matriz de trazabilidad es un artefacto de build: se
+                         regenera en cada compilación a partir del OCL. -->
+                    <execution>
+                        <id>generar-trazabilidad</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.hotel.pms.generador.GeneradorTrazabilidad</mainClass>
+                            <arguments>
+                                <argument>${project.basedir}/../pms-docs/trazabilidad.md</argument>
+                            </arguments>
+                            <classpathScope>compile</classpathScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

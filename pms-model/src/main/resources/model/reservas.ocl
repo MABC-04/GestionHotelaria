@@ -1,0 +1,321 @@
+-- ============================================================================
+-- reservas.ocl — Catálogo normativo de invariantes (Complete OCL)
+-- PMS de reservas hoteleras · Sprint 0
+-- ============================================================================
+--
+-- Este documento es la ESPECIFICACIÓN de las reglas del modelo. Cada invariante
+-- se implementa en Java en `com.hotel.pms.modelo.validacion.CatalogoInvariantes`
+-- con el mismo nombre y la misma regla (RN-xx), y el test
+-- `CatalogoOclTest` verifica que no exista deriva entre ambos artefactos.
+--
+-- Convenciones:
+--   * Los nombres de contexto son los del metamodelo (reservas.ecore), en
+--     PascalCase. El documento de requisitos usa MAYÚSCULAS.
+--   * EDate / EDateTime se mapean a java.time.LocalDate / LocalDateTime.
+--   * `-- NOTA:` documenta una adaptación respecto del §4 del plan.
+--
+-- LIMITACIÓN CONOCIDA DEL MOTOR (documentada en docs/adr/ADR-002):
+--   El OCL clásico de Eclipse no define operaciones sobre tipos de fecha
+--   (`<`, `>`, `daysBetween`). Por eso este catálogo se ejecuta mediante
+--   validadores Java derivados y no mediante OCLInput. La sintaxis se mantiene
+--   como especificación revisable y el catálogo se valida por consistencia.
+-- ============================================================================
+
+package reservas
+
+-- ---------------------------------------------------------------------------
+-- Operaciones auxiliares (def)
+-- ---------------------------------------------------------------------------
+
+context ReservaHabitacion
+def: estaActiva() : Boolean =
+  self.reserva.estado = EstadoReserva::PENDIENTE or
+  self.reserva.estado = EstadoReserva::CONFIRMADA or
+  self.reserva.estado = EstadoReserva::EN_CASA
+
+context ReservaHabitacion
+def: noches() : Integer =
+  self.fechaSalida.daysBetween(self.fechaEntrada)
+
+context Reserva
+def: noches() : Integer =
+  self.fechaSalida.daysBetween(self.fechaEntrada)
+
+context Reserva
+def: totalLineas() : Decimal =
+  self.lineas->collect(l | l.precioTotal)->sum()
+
+context Reserva
+def: totalEsperado() : Decimal =
+  (self.totalLineas() - self.totalLineas() * self.descuentoPorcentaje / 100)->round(2)
+
+context Habitacion
+def: bloqueadaEn(fecha : EDate) : Boolean =
+  self.fueraDeServicio or
+  self.bloqueos->exists(b | fecha >= b.fechaInicio and fecha < b.fechaFin)
+
+context Usuario
+def: tienePermiso(p : Permiso) : Boolean =
+  self.rol.permisos->includes(p)
+
+-- ===========================================================================
+-- RN-01 — Sin solapamiento de reservas en la misma habitación
+-- ===========================================================================
+context ReservaHabitacion inv sinSolapamientoEnHabitacion:
+  self.habitacion->notEmpty() implies
+    ReservaHabitacion.allInstances()->forAll(otra |
+      otra <> self and
+      otra.habitacion = self.habitacion and
+      otra.estaActiva() and self.estaActiva()
+      implies
+      (self.fechaSalida <= otra.fechaEntrada or otra.fechaSalida <= self.fechaEntrada))
+
+-- RN-01b — Un bloqueo no solapa reservas activas
+context BloqueoHabitacion inv bloqueoNoSolapaReserva:
+  ReservaHabitacion.allInstances()->forAll(rh |
+    rh.habitacion = self.habitacion and rh.estaActiva() implies
+    (rh.fechaSalida <= self.fechaInicio or self.fechaFin <= rh.fechaEntrada))
+
+-- ===========================================================================
+-- RN-02 — Horas estándar y cargos por extensión
+-- ===========================================================================
+context Propiedad inv horasEstandar:
+  self.horaCheckIn.hour = 15 and self.horaCheckOut.hour = 12
+
+context Estancia inv lateCheckOutRequiereAutorizacion:
+  self.salidaReal->notEmpty() and
+  self.salidaReal.toLocalTime() > self.propiedad.horaCheckOut implies
+    self.autorizacionSalidaTardia = true
+
+context Estancia inv earlyCheckInRequiereAutorizacion:
+  self.llegadaReal.toLocalTime() < self.propiedad.horaCheckIn implies
+    self.autorizacionSupervisor = true
+
+-- ===========================================================================
+-- RN-03 — Datos mínimos de una reserva
+-- ===========================================================================
+-- NOTA: `trim()` no pertenece a la librería estándar de OCL; se valida tamaño > 0.
+context Reserva inv datosMinimos:
+  not self.titular.oclIsUndefined() and
+  self.titular.nombre.size() > 0 and
+  (self.titular.correo->notEmpty() or self.titular.telefono->notEmpty()) and
+  self.fechaEntrada < self.fechaSalida and
+  self.adultos >= 1 and
+  self.ninos >= 0 and
+  self.lineas->notEmpty() and
+  self.lineas->forAll(l | not l.tarifa.oclIsUndefined())
+
+-- ===========================================================================
+-- RN-04 — Precio completo y mínimos de estancia
+-- ===========================================================================
+context ReservaHabitacion inv todasLasNochesTienenPrecio:
+  self.tarifa.precios->select(p |
+    p.fecha >= self.fechaEntrada and p.fecha < self.fechaSalida
+  )->size() = self.noches()
+
+context ReservaHabitacion inv tarifaVigente:
+  self.fechaEntrada >= self.tarifa.vigenciaInicio and
+  self.fechaSalida <= self.tarifa.vigenciaFin.plusDays(1)
+
+context ReservaHabitacion inv estanciaMinimaCumplida:
+  self.noches() >= self.tarifa.estanciaMinima
+
+context ReservaHabitacion inv estanciaMaximaCumplida:
+  self.tarifa.estanciaMaxima = 0 or self.noches() <= self.tarifa.estanciaMaxima
+
+context ReservaHabitacion inv cierreDeLlegada:
+  self.fechaEntrada <= self.tarifa.vigenciaFin.minusDays(self.tarifa.cierreLlegadaDias)
+
+-- ===========================================================================
+-- RN-05 — Políticas de cancelación configurables
+-- ===========================================================================
+context PoliticaCancelacion inv flexible:
+  self.codigo = 'FLEXIBLE' implies
+    self.horasLimite = 48 and self.cargoNoches = 0 and self.reembolsable = true
+
+context PoliticaCancelacion inv moderada:
+  self.codigo = 'MODERADA' implies
+    self.cargoNoches = 1 and self.reembolsable = true
+
+context PoliticaCancelacion inv noReembolsable:
+  self.codigo = 'NO_REEMBOLSABLE' implies
+    self.cargoPorcentaje = 100 and self.reembolsable = false
+
+-- NOTA: el importe esperado se calcula con la misma operación que usa el
+-- servicio (RN-05). Ver PoliticaCancelacion#cargoPara en el validador Java.
+context Reserva inv cargoCancelacionConforme:
+  self.estado = EstadoReserva::CANCELADA implies
+    self.cargoCancelacion = self.politicaCancelacion.cargoPara(
+      self.fechaCancelacion, self.fechaEntrada, self.total)
+
+-- ===========================================================================
+-- RN-06 — Liberación automática de reservas sin garantía
+-- ===========================================================================
+context Reserva inv sinGarantiaTieneHoraLimite:
+  self.garantia->notEmpty() and self.garantia.tipo = TipoGarantia::SIN_GARANTIA
+  implies
+  self.garantia.horaLimiteLiberacion =
+    self.fechaEntrada.atTime(self.propiedad.horaLimiteSinGarantia)
+
+context Reserva inv expiradaSoloSinGarantia:
+  self.estado = EstadoReserva::EXPIRADA implies
+    self.garantia->notEmpty() and self.garantia.tipo = TipoGarantia::SIN_GARANTIA
+
+context Reserva inv confirmadaRequiereGarantia:
+  self.estado = EstadoReserva::CONFIRMADA implies
+    self.garantia->notEmpty()
+
+-- ===========================================================================
+-- RN-07 — Solo se entrega habitación limpia o inspeccionada
+-- ===========================================================================
+context Estancia inv habitacionLista:
+  self.habitacion.estadoLimpieza = EstadoLimpieza::LIMPIA or
+  self.habitacion.estadoLimpieza = EstadoLimpieza::INSPECCIONADA or
+  self.autorizacionSupervisor = true
+
+context Estancia inv habitacionNoBloqueada:
+  self.habitacion.bloqueos->forAll(b |
+    self.llegadaReal.toLocalDate() < b.fechaInicio or
+    self.llegadaReal.toLocalDate() >= b.fechaFin)
+
+-- ===========================================================================
+-- RN-08 — No-show con cargo
+-- ===========================================================================
+context Reserva inv noShowTrasHoraLimite:
+  self.estado = EstadoReserva::NO_SHOW implies
+    self.fechaNoShow->notEmpty() and
+    self.fechaNoShow.toLocalDate() = self.fechaEntrada and
+    self.fechaNoShow.toLocalTime() >= self.horaLimiteLlegada
+
+context Reserva inv noShowConCargo:
+  self.estado = EstadoReserva::NO_SHOW implies
+    self.cargoNoShow = self.politicaCancelacion.cargoNoShow(self.total)
+
+-- ===========================================================================
+-- RN-09 — Descuentos mayores al 10 % requieren gerencia
+-- ===========================================================================
+context Reserva inv descuentoAprobado:
+  self.descuentoPorcentaje > 10 implies
+    self.aprobacionDescuento->notEmpty() and
+    self.aprobacionDescuento.porcentajeAprobado >= self.descuentoPorcentaje and
+    self.aprobacionDescuento.aprobadoPor.tienePermiso(Permiso::DESCUENTO_APROBAR)
+
+context Reserva inv descuentoEnRango:
+  self.descuentoPorcentaje >= 0 and self.descuentoPorcentaje <= 100
+
+-- ===========================================================================
+-- RN-10 — Grupos de 5+ habitaciones con cut-off
+-- ===========================================================================
+context BloqueoGrupo inv minimoHabitaciones:
+  self.habitacionesBloqueadas >= 5
+
+context GrupoReserva inv cutoffValido:
+  self.cutoff > self.creadoEn.toLocalDate() and
+  self.cutoff <= self.bloqueos->collect(b | b.fechaEntrada)->min()
+
+context GrupoReserva inv vencidoLiberaInventario:
+  self.estado = EstadoGrupo::VENCIDO implies
+    self.cutoff < self.propiedad.fechaOperativa
+
+-- ===========================================================================
+-- RN-11 — Bloqueo tras el cierre del día
+-- ===========================================================================
+context Propiedad inv cierreNoRetrocede:
+  self.ultimoCierre->notEmpty() implies
+    self.fechaOperativa >= self.ultimoCierre.fechaOperativa
+
+-- NOTA: `ahora` es una variable de entorno; en el validador se pasa como
+-- parámetro de ejecución (RelojValidacion).
+context Reserva inv noModificableTrasCierre:
+  self.modificadaEn->notEmpty() and
+  self.propiedad.ultimoCierre->notEmpty() and
+  self.modificadaEn.toLocalDate() <= self.propiedad.ultimoCierre.fechaOperativa implies
+    self.modificadaPor->notEmpty() and
+    (self.modificadaPor.tienePermiso(Permiso::EXCEPCION_CIERRE) or
+     self.modificadaEn.toLocalDate() > self.propiedad.ultimoCierre.fechaOperativa)
+
+-- ===========================================================================
+-- RN-12 — Todo cambio queda en bitácora
+-- ===========================================================================
+context Bitacora inv entradaCompleta:
+  self.entidad.size() > 0 and
+  not self.entidadId.oclIsUndefined() and
+  not self.usuario.oclIsUndefined() and
+  not self.fecha.oclIsUndefined() and
+  self.valorAnterior <> self.valorNuevo
+
+-- NOTA: Bitacora se enlaza por (entidad, entidadId); no hay navegación directa.
+context Reserva inv modificacionesAuditadas:
+  self.modificadaEn->notEmpty() and self.modificadaEn > self.creadaEn implies
+    Bitacora.allInstances()->exists(b |
+      b.entidad = 'Reserva' and b.entidadId = self.id and
+      b.accion = 'MODIFICAR' and b.fecha = self.modificadaEn)
+
+-- ===========================================================================
+-- RN-13 — Fuera de servicio no es vendible
+-- ===========================================================================
+context Habitacion inv fueraDeServicioSinReservasActivas:
+  self.fueraDeServicio implies
+    ReservaHabitacion.allInstances()->forAll(rh |
+      rh.habitacion = self implies not rh.estaActiva())
+
+-- ===========================================================================
+-- RN-14 — Overbooking desactivado por defecto
+-- ===========================================================================
+context Propiedad inv overbookingControlado:
+  self.overbookingHabilitado implies
+    self.limiteOverbooking > 0 and
+    self.overbookingHabilitadoPor->notEmpty() and
+    self.overbookingHabilitadoPor.tienePermiso(Permiso::OVERBOOKING_HABILITAR)
+
+context Propiedad inv overbookingDesactivadoPorDefecto:
+  self.overbookingHabilitadoPor->isEmpty() implies
+    self.overbookingHabilitado = false and self.limiteOverbooking = 0
+
+-- ===========================================================================
+-- RN-15 — Protección de datos
+-- ===========================================================================
+context Huesped inv consentimientoAntesDeTratar:
+  self.datosPersonales = true implies
+    self.consentimientoDatos = true and self.fechaConsentimiento->notEmpty()
+
+context Huesped inv derechoDeSupresion:
+  self.solicitudSupresion = true implies
+    self.datosAnonimizados = true and self.notas->isEmpty()
+
+context Huesped inv correoValido:
+  self.correo->notEmpty() implies
+    self.correo.matches('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}')
+
+-- ===========================================================================
+-- §4.2 — Invariantes adicionales exigidos por el núcleo
+-- ===========================================================================
+context Reserva inv fechasCoherentes:
+  self.fechaEntrada < self.fechaSalida
+
+context Reserva inv codigoConfirmacionUnico:
+  Reserva.allInstances()->forAll(r |
+    r <> self implies r.codigoConfirmacion <> self.codigoConfirmacion)
+
+context ReservaHabitacion inv fechasDentroDeReserva:
+  self.fechaEntrada >= self.reserva.fechaEntrada and
+  self.fechaSalida <= self.reserva.fechaSalida
+
+context ReservaHabitacion inv tipoHabitacionCoherente:
+  self.habitacion->notEmpty() implies
+    self.habitacion.tipo = self.tipoHabitacion
+
+context RetencionInventario inv ttlDiezMinutos:
+  self.expiraEn = self.creadaEn.plusMinutes(10)
+
+context RetencionInventario inv expiradaNoConsumible:
+  self.estado = EstadoRetencion::EXPIRADA implies self.consumidaEn->isEmpty()
+
+context Reserva inv totalConsistente:
+  self.total = self.totalEsperado()
+
+context ReservaHabitacion inv capacidadRespetada:
+  self.reserva.adultos <= self.tipoHabitacion.capacidadAdultos * self.reserva.lineas->size() and
+  self.reserva.ninos  <= self.tipoHabitacion.capacidadNinos  * self.reserva.lineas->size()
+
+endpackage

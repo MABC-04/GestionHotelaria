@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="reservas" nsURI="http://www.hotel.com/pms/reservas" nsPrefix="reservas">
+
+    <!-- ================================================================
+         Tipos de dato primitivos (mapeo §5.2 del plan)
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EDataType" name="UUID" instanceClassName="java.util.UUID" />
+    <eClassifiers xsi:type="ecore:EDataType" name="Decimal" instanceClassName="java.math.BigDecimal" />
+    <eClassifiers xsi:type="ecore:EDataType" name="EDate" instanceClassName="java.time.LocalDate" />
+    <eClassifiers xsi:type="ecore:EDataType" name="EDateTime" instanceClassName="java.time.LocalDateTime" />
+    <eClassifiers xsi:type="ecore:EDataType" name="Hora" instanceClassName="java.time.LocalTime" />
+
+    <!-- ================================================================
+         Enumeraciones (§3.3 del plan)
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EEnum" name="EstadoReserva">
+        <eLiterals name="PENDIENTE" value="0" />
+        <eLiterals name="CONFIRMADA" value="1" />
+        <eLiterals name="EN_CASA" value="2" />
+        <eLiterals name="FINALIZADA" value="3" />
+        <eLiterals name="CANCELADA" value="4" />
+        <eLiterals name="NO_SHOW" value="5" />
+        <eLiterals name="EXPIRADA" value="6" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="EstadoLimpieza">
+        <eLiterals name="OCUPADA" value="0" />
+        <eLiterals name="SUCIA" value="1" />
+        <eLiterals name="EN_LIMPIEZA" value="2" />
+        <eLiterals name="LIMPIA" value="3" />
+        <eLiterals name="INSPECCIONADA" value="4" />
+        <eLiterals name="FUERA_DE_SERVICIO" value="5" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="PlanTarifario">
+        <eLiterals name="SOLO_HABITACION" value="0" />
+        <eLiterals name="DESAYUNO" value="1" />
+        <eLiterals name="MEDIA_PENSION" value="2" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="TipoCanal">
+        <eLiterals name="DIRECTO" value="0" />
+        <eLiterals name="TELEFONO" value="1" />
+        <eLiterals name="WALK_IN" value="2" />
+        <eLiterals name="WEB" value="3" />
+        <eLiterals name="OTA" value="4" />
+        <eLiterals name="AGENCIA" value="5" />
+        <eLiterals name="CORPORATIVO" value="6" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="TipoGarantia">
+        <eLiterals name="TARJETA" value="0" />
+        <eLiterals name="DEPOSITO" value="1" />
+        <eLiterals name="EMPRESA" value="2" />
+        <eLiterals name="SIN_GARANTIA" value="3" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="EstadoRetencion">
+        <eLiterals name="ACTIVA" value="0" />
+        <eLiterals name="CONSUMIDA" value="1" />
+        <eLiterals name="EXPIRADA" value="2" />
+        <eLiterals name="LIBERADA" value="3" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="MotivoBloqueo">
+        <eLiterals name="MANTENIMIENTO" value="0" />
+        <eLiterals name="USO_INTERNO" value="1" />
+        <eLiterals name="FUERA_DE_SERVICIO" value="2" />
+        <eLiterals name="CUARENTENA" value="3" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="EstadoFolio">
+        <eLiterals name="ABIERTO" value="0" />
+        <eLiterals name="CERRADO" value="1" />
+        <eLiterals name="SALDO_PENDIENTE" value="2" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="MetodoPago">
+        <eLiterals name="EFECTIVO" value="0" />
+        <eLiterals name="TARJETA" value="1" />
+        <eLiterals name="TRANSFERENCIA" value="2" />
+        <eLiterals name="DEPOSITO" value="3" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="TipoDocumento">
+        <eLiterals name="DNI" value="0" />
+        <eLiterals name="PASAPORTE" value="1" />
+        <eLiterals name="NIT" value="2" />
+        <eLiterals name="OTRO" value="3" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="EstadoGrupo">
+        <eLiterals name="TENTATIVO" value="0" />
+        <eLiterals name="CONFIRMADO" value="1" />
+        <eLiterals name="VENCIDO" value="2" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EEnum" name="Permiso">
+        <eLiterals name="RESERVA_CREAR" value="0" />
+        <eLiterals name="RESERVA_MODIFICAR" value="1" />
+        <eLiterals name="RESERVA_CANCELAR" value="2" />
+        <eLiterals name="DESCUENTO_APLICAR" value="3" />
+        <eLiterals name="DESCUENTO_APROBAR" value="4" />
+        <eLiterals name="CHECKIN_REALIZAR" value="5" />
+        <eLiterals name="CHECKOUT_REALIZAR" value="6" />
+        <eLiterals name="FOLIO_MODIFICAR" value="7" />
+        <eLiterals name="HABITACION_ESTADO_CAMBIAR" value="8" />
+        <eLiterals name="TARIFA_MODIFICAR" value="9" />
+        <eLiterals name="CIERRE_EJECUTAR" value="10" />
+        <eLiterals name="EXCEPCION_CIERRE" value="11" />
+        <eLiterals name="USUARIO_ADMINISTRAR" value="12" />
+        <eLiterals name="REPORTE_VER" value="13" />
+        <eLiterals name="OVERBOOKING_HABILITAR" value="14" />
+    </eClassifiers>
+
+    <!-- ================================================================
+         PROPIEDAD — contexto raíz del sistema (DEC-07, mono-propiedad)
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EClass" name="Propiedad">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="nombre" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="moneda" lowerBound="1" defaultValueLiteral="USD" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="zonaHoraria" lowerBound="1" defaultValueLiteral="America/Guayaquil" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="horaCheckIn" lowerBound="1" eType="#//Hora" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="horaCheckOut" lowerBound="1" eType="#//Hora" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="horaLimiteSinGarantia" lowerBound="1" eType="#//Hora" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="horaLimiteLlegada" lowerBound="1" eType="#//Hora" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="overbookingHabilitado" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="limiteOverbooking" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaOperativa" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="tiposHabitacion" upperBound="-1" eType="#//TipoHabitacion" eOpposite="#//TipoHabitacion/propiedad" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="habitaciones" upperBound="-1" eType="#//Habitacion" eOpposite="#//Habitacion/propiedad" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="estancias" upperBound="-1" eType="#//Estancia" eOpposite="#//Estancia/propiedad" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="grupos" upperBound="-1" eType="#//GrupoReserva" eOpposite="#//GrupoReserva/propiedad" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="cierreDia" eType="#//CierreDia" eOpposite="#//CierreDia/propiedad" />
+        <!-- Derivada: el cierre de mayor fechaOperativa en cierreDia. Sin opuesto
+             para no duplicar la relación 1..* existente. -->
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ultimoCierre" eType="#//CierreDia" transient="true" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="overbookingHabilitadoPor" eType="#//Usuario" eOpposite="#//Usuario/propiedadesOverbooking" />
+    </eClassifiers>
+
+    <!-- ================================================================
+         CIERRE_DIA — soporta RN-11 (cierre no retrocede)
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EClass" name="CierreDia">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaOperativa" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="ejecutadoEn" lowerBound="1" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="propiedad" lowerBound="1" eType="#//Propiedad" eOpposite="#//Propiedad/cierreDia" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="ejecutadoPor" lowerBound="1" eType="#//Usuario" eOpposite="#//Usuario/cierresEjecutados" />
+    </eClassifiers>
+
+    <!-- ================================================================
+         ROL / USUARIO — RN-09, RN-12, RN-14, HU-26
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EClass" name="Rol">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="nombre" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="permisos" upperBound="-1" eType="#//Permiso" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="usuarios" upperBound="-1" eType="#//Usuario" eOpposite="#//Usuario/rol" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="Usuario">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="nombreUsuario" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="correo" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="activo" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="rol" lowerBound="1" eType="#//Rol" eOpposite="#//Rol/usuarios" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="bitacoras" upperBound="-1" eType="#//Bitacora" eOpposite="#//Bitacora/usuario" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="aprobaciones" upperBound="-1" eType="#//AprobacionDescuento" eOpposite="#//AprobacionDescuento/aprobadoPor" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="reservasModificadas" upperBound="-1" eType="#//Reserva" eOpposite="#//Reserva/modificadaPor" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="propiedadesOverbooking" upperBound="-1" eType="#//Propiedad" eOpposite="#//Propiedad/overbookingHabilitadoPor" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="cierresEjecutados" upperBound="-1" eType="#//CierreDia" eOpposite="#//CierreDia/ejecutadoPor" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="Bitacora">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="entidad" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="entidadId" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="campo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="valorAnterior" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="valorNuevo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="accion" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fecha" lowerBound="1" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="usuario" lowerBound="1" eType="#//Usuario" eOpposite="#//Usuario/bitacoras" />
+    </eClassifiers>
+
+    <!-- ================================================================
+         INVENTARIO: TIPO_HABITACION y HABITACION
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EClass" name="TipoHabitacion">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="codigo" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="nombre" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="capacidadAdultos" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="2" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="capacidadNinos" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="descripcion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="activo" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="propiedad" lowerBound="1" eType="#//Propiedad" eOpposite="#//Propiedad/tiposHabitacion" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="habitaciones" upperBound="-1" eType="#//Habitacion" eOpposite="#//Habitacion/tipo" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="tarifas" upperBound="-1" eType="#//Tarifa" eOpposite="#//Tarifa/tipoHabitacion" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="retenciones" upperBound="-1" eType="#//RetencionInventario" eOpposite="#//RetencionInventario/tipoHabitacion" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="Habitacion">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="numero" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="piso" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="estadoLimpieza" lowerBound="1" eType="#//EstadoLimpieza" defaultValueLiteral="LIMPIA" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fueraDeServicio" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="tipo" lowerBound="1" eType="#//TipoHabitacion" eOpposite="#//TipoHabitacion/habitaciones" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="propiedad" lowerBound="1" eType="#//Propiedad" eOpposite="#//Propiedad/habitaciones" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="bloqueos" upperBound="-1" eType="#//BloqueoHabitacion" eOpposite="#//BloqueoHabitacion/habitacion" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="lineasReserva" upperBound="-1" eType="#//ReservaHabitacion" eOpposite="#//ReservaHabitacion/habitacion" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="estancias" upperBound="-1" eType="#//Estancia" eOpposite="#//Estancia/habitacion" />
+    </eClassifiers>
+
+    <!-- ================================================================
+         TARIFAS: POLITICA_CANCELACION, TARIFA, PRECIO_NOCHE
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EClass" name="PoliticaCancelacion">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="codigo" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="horasLimite" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="cargoNoches" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="cargoPorcentaje" lowerBound="1" eType="#//Decimal" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="reembolsable" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="tarifas" upperBound="-1" eType="#//Tarifa" eOpposite="#//Tarifa/politicaCancelacion" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="Tarifa">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="codigo" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="nombre" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="plan" lowerBound="1" eType="#//PlanTarifario" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="vigenciaInicio" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="vigenciaFin" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="estanciaMinima" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="1" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="estanciaMaxima" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="cierreLlegadaDias" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="activa" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="tipoHabitacion" lowerBound="1" eType="#//TipoHabitacion" eOpposite="#//TipoHabitacion/tarifas" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="politicaCancelacion" lowerBound="1" eType="#//PoliticaCancelacion" eOpposite="#//PoliticaCancelacion/tarifas" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="precios" lowerBound="1" upperBound="-1" eType="#//PrecioNoche" containment="true" eOpposite="#//PrecioNoche/tarifa" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="lineas" upperBound="-1" eType="#//ReservaHabitacion" eOpposite="#//ReservaHabitacion/tarifa" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="PrecioNoche">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fecha" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="monto" lowerBound="1" eType="#//Decimal" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="impuestoPorcentaje" lowerBound="1" eType="#//Decimal" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="tarifa" lowerBound="1" eType="#//Tarifa" eOpposite="#//Tarifa/precios" />
+    </eClassifiers>
+
+    <!-- ================================================================
+         CANAL y HUESPED
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EClass" name="Canal">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="nombre" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="tipo" lowerBound="1" eType="#//TipoCanal" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="comisionPorcentaje" lowerBound="1" eType="#//Decimal" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="reservas" upperBound="-1" eType="#//Reserva" eOpposite="#//Reserva/canal" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="Huesped">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="nombre" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="correo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="telefono" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="documento" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="tipoDocumento" eType="#//TipoDocumento" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="notas" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="consentimientoDatos" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaConsentimiento" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="datosPersonales" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="solicitudSupresion" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="datosAnonimizados" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="reservas" upperBound="-1" eType="#//Reserva" eOpposite="#//Reserva/titular" />
+    </eClassifiers>
+
+    <!-- ================================================================
+         RESERVA y su línea
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EClass" name="Reserva">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="codigoConfirmacion" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaEntrada" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaSalida" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="adultos" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="ninos" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="estado" lowerBound="1" eType="#//EstadoReserva" defaultValueLiteral="PENDIENTE" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="descuentoPorcentaje" lowerBound="1" eType="#//Decimal" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="total" lowerBound="1" eType="#//Decimal" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="creadaEn" lowerBound="1" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="modificadaEn" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaNoShow" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaCancelacion" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="motivoCancelacion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="cargoCancelacion" eType="#//Decimal" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="cargoNoShow" eType="#//Decimal" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="horaLimiteLlegada" eType="#//Hora" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="propiedad" lowerBound="1" eType="#//Propiedad" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="titular" lowerBound="1" eType="#//Huesped" eOpposite="#//Huesped/reservas" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="canal" lowerBound="1" eType="#//Canal" eOpposite="#//Canal/reservas" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="politicaCancelacion" lowerBound="1" eType="#//PoliticaCancelacion" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="lineas" lowerBound="1" upperBound="-1" eType="#//ReservaHabitacion" containment="true" eOpposite="#//ReservaHabitacion/reserva" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="garantia" eType="#//Garantia" eOpposite="#//Garantia/reserva" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="retencion" eType="#//RetencionInventario" eOpposite="#//RetencionInventario/reserva" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="aprobacionDescuento" eType="#//AprobacionDescuento" eOpposite="#//AprobacionDescuento/reserva" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="estancia" eType="#//Estancia" eOpposite="#//Estancia/reserva" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="grupo" eType="#//GrupoReserva" eOpposite="#//GrupoReserva/reservas" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="modificadaPor" eType="#//Usuario" eOpposite="#//Usuario/reservasModificadas" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="ReservaHabitacion">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaEntrada" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaSalida" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="precioTotal" lowerBound="1" eType="#//Decimal" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="reserva" lowerBound="1" eType="#//Reserva" eOpposite="#//Reserva/lineas" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="habitacion" eType="#//Habitacion" eOpposite="#//Habitacion/lineasReserva" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="tipoHabitacion" lowerBound="1" eType="#//TipoHabitacion" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="tarifa" lowerBound="1" eType="#//Tarifa" eOpposite="#//Tarifa/lineas" />
+    </eClassifiers>
+
+    <!-- ================================================================
+         GARANTIA, RETENCION, BLOQUEOS, GRUPOS, APROBACION
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EClass" name="Garantia">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="tipo" lowerBound="1" eType="#//TipoGarantia" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="monto" eType="#//Decimal" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="referencia" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="autorizadaEn" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="horaLimiteLiberacion" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="reserva" lowerBound="1" eType="#//Reserva" eOpposite="#//Reserva/garantia" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="RetencionInventario">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="cantidad" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="1" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaEntrada" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaSalida" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="creadaEn" lowerBound="1" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="expiraEn" lowerBound="1" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="consumidaEn" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="tokenSesion" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="estado" lowerBound="1" eType="#//EstadoRetencion" defaultValueLiteral="ACTIVA" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="tipoHabitacion" lowerBound="1" eType="#//TipoHabitacion" eOpposite="#//TipoHabitacion/retenciones" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="reserva" eType="#//Reserva" eOpposite="#//Reserva/retencion" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="BloqueoHabitacion">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="motivo" lowerBound="1" eType="#//MotivoBloqueo" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaInicio" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaFin" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="observacion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="habitacion" lowerBound="1" eType="#//Habitacion" eOpposite="#//Habitacion/bloqueos" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="GrupoReserva">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="nombre" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="cutoff" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="creadoEn" lowerBound="1" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="estado" lowerBound="1" eType="#//EstadoGrupo" defaultValueLiteral="TENTATIVO" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="propiedad" lowerBound="1" eType="#//Propiedad" eOpposite="#//Propiedad/grupos" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="bloqueos" lowerBound="1" upperBound="-1" eType="#//BloqueoGrupo" containment="true" eOpposite="#//BloqueoGrupo/grupo" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="reservas" upperBound="-1" eType="#//Reserva" eOpposite="#//Reserva/grupo" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="BloqueoGrupo">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="habitacionesBloqueadas" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaEntrada" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaSalida" lowerBound="1" eType="#//EDate" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="tipoHabitacion" lowerBound="1" eType="#//TipoHabitacion" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="grupo" lowerBound="1" eType="#//GrupoReserva" eOpposite="#//GrupoReserva/bloqueos" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="AprobacionDescuento">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="porcentajeAprobado" lowerBound="1" eType="#//Decimal" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fechaAprobacion" lowerBound="1" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="justificacion" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="aprobadoPor" lowerBound="1" eType="#//Usuario" eOpposite="#//Usuario/aprobaciones" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="reserva" lowerBound="1" eType="#//Reserva" eOpposite="#//Reserva/aprobacionDescuento" />
+    </eClassifiers>
+
+    <!-- ================================================================
+         ESTANCIA / FOLIO / CARGO / PAGO (modelados en S0, implementados en S3)
+         ================================================================ -->
+    <eClassifiers xsi:type="ecore:EClass" name="Estancia">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="llegadaReal" lowerBound="1" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="salidaReal" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="autorizacionSupervisor" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="autorizacionSalidaTardia" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="reserva" lowerBound="1" eType="#//Reserva" eOpposite="#//Reserva/estancia" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="habitacion" lowerBound="1" eType="#//Habitacion" eOpposite="#//Habitacion/estancias" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="propiedad" lowerBound="1" eType="#//Propiedad" eOpposite="#//Propiedad/estancias" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="folio" lowerBound="1" eType="#//Folio" eOpposite="#//Folio/estancia" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="Folio">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="estado" lowerBound="1" eType="#//EstadoFolio" defaultValueLiteral="ABIERTO" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="saldo" lowerBound="1" eType="#//Decimal" defaultValueLiteral="0" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="estancia" eType="#//Estancia" eOpposite="#//Estancia/folio" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="cargos" upperBound="-1" eType="#//Cargo" containment="true" eOpposite="#//Cargo/folio" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="pagos" upperBound="-1" eType="#//Pago" containment="true" eOpposite="#//Pago/folio" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="Cargo">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="concepto" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="monto" lowerBound="1" eType="#//Decimal" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fecha" lowerBound="1" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="folio" lowerBound="1" eType="#//Folio" eOpposite="#//Folio/cargos" />
+    </eClassifiers>
+
+    <eClassifiers xsi:type="ecore:EClass" name="Pago">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="#//UUID" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="metodo" lowerBound="1" eType="#//MetodoPago" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="monto" lowerBound="1" eType="#//Decimal" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="referencia" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" />
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fecha" lowerBound="1" eType="#//EDateTime" />
+        <eStructuralFeatures xsi:type="ecore:EReference" name="folio" lowerBound="1" eType="#//Folio" eOpposite="#//Folio/pagos" />
+    </eClassifiers>
+</ecore:EPackage>

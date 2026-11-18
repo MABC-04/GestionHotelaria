@@ -1,0 +1,80 @@
+.marco {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px clamp(20px, 5vw, 64px);
+  border-bottom: 1px solid var(--borde);
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.marca__sello {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--oro);
+  color: #1b1408;
+  font-family: var(--serif);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.marca__nombre {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.marca__sub {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: var(--tenue);
+}
+
+.cabecera__meta {
+  display: flex;
+  gap: 10px;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tenue);
+}
+
+.separador {
+  opacity: 0.5;
+}
+
+.contenido {
+  flex: 1;
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 56px) clamp(20px, 5vw, 40px);
+}
+
+.pie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 18px clamp(20px, 5vw, 64px);
+  border-top: 1px solid var(--borde);
+  font-size: 0.78rem;
+  color: var(--tenue);
+}
+
+.pie code {
+  font-family: var(--mono);
+}

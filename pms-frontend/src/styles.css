@@ -1,0 +1,51 @@
+/* Estilos globales del PMS — entrega 1 */
+
+:root {
+  --fondo: #10161c;
+  --superficie: #161e26;
+  --borde: #26313b;
+  --texto: #e9ecef;
+  --tenue: #9aa7b4;
+  --oro: #d4af60;
+  --verde: #4ade9a;
+  --rojo: #f87171;
+
+  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: 'Cascadia Code', 'JetBrains Mono', Consolas, monospace;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(70% 55% at 15% 0%, rgb(212 175 96 / 10%), transparent 60%),
+    radial-gradient(60% 60% at 95% 15%, rgb(56 189 248 / 7%), transparent 55%),
+    var(--fondo);
+  color: var(--texto);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--oro);
+}
+
+::selection {
+  background: rgb(212 175 96 / 30%);
+}

@@ -1,0 +1,83 @@
+<section class="panel" [class]="'panel panel--' + tono()">
+  <div class="panel__fila">
+    <p class="etiqueta">Estado del sistema</p>
+    <span class="pildora">
+      @switch (tono()) {
+        @case ('ok') { M1 en verde }
+        @case ('cargando') { Consultando }
+        @default { Requiere atención }
+      }
+    </span>
+  </div>
+
+  <h1 class="panel__titulo">{{ titulo() }}</h1>
+
+  <p class="panel__texto">
+    @if (cargando()) {
+      Consultando <code>GET /health</code>…
+    } @else if (error()) {
+      {{ error() }}
+    } @else {
+      La API respondió y la cadena hasta PostgreSQL está viva.
+    }
+  </p>
+
+  @if (detalleBase(); as detalle) {
+    <p class="panel__detalle">{{ detalle }}</p>
+  }
+</section>
+
+@if (salud(); as s) {
+  <div class="rejilla">
+    <article class="dato">
+      <span class="dato__clave">Aplicación</span>
+      <strong class="dato__valor">{{ s.aplicacion }}</strong>
+      <span class="dato__pie">versión {{ s.version }}</span>
+    </article>
+
+    <article class="dato">
+      <span class="dato__clave">Base de datos</span>
+      <strong class="dato__valor">{{ s.baseDatos?.estado ?? '—' }}</strong>
+      @if (migraciones(); as total) {
+        <span class="dato__pie">{{ total }} migraciones aplicadas</span>
+      } @else {
+        <span class="dato__pie">Flyway · PostgreSQL 16</span>
+      }
+    </article>
+
+    <article class="dato">
+      <span class="dato__clave">Comprobado</span>
+      <strong class="dato__valor dato__valor--fecha">{{ momento() }}</strong>
+      <span class="dato__pie">hora del servidor</span>
+    </article>
+
+    <article class="dato">
+      <span class="dato__clave">Regla crítica</span>
+      <strong class="dato__valor">rh_sin_solape</strong>
+      <span class="dato__pie">EXCLUDE gist · RN-01</span>
+    </article>
+  </div>
+} @else if (error()) {
+  <div class="aviso">
+    Arranca el backend con <code>.\mvnw.cmd -pl pms-backend spring-boot:run</code> y vuelve a comprobar.
+  </div>
+}
+
+<div class="acciones">
+  <button type="button" class="boton" (click)="consultar()" [disabled]="cargando()">
+    {{ cargando() ? 'Comprobando…' : 'Volver a comprobar' }}
+  </button>
+  <p class="nota">
+    La misma sonda que usa el equipo para validar el despliegue: <code>GET /health</code>.
+  </p>
+</div>
+
+<section class="hito">
+  <p class="etiqueta">Hito M1</p>
+  <h2>Nunca se vende dos veces la misma habitación</h2>
+  <p>
+    El modelo OCL describe la regla y PostgreSQL la garantiza con una restricción de
+    exclusión. Cien hilos compiten por la última habitación: una reserva gana y
+    noventa y nueve reciben <code>SQLState 23P01</code>.
+  </p>
+</section>
