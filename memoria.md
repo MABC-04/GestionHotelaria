@@ -1,10 +1,13 @@
 # Memoria del proyecto — estado actual
 
 - **Fecha:** 2026-11-17
-- **Rama:** `master` (2 commits: `31368a9` entrega 1, `661b7b4` AGENTS.md)
+- **Rama:** `master` (3 commits: `31368a9` entrega 1, `661b7b4` AGENTS.md,
+  `8f8cfbc` memoria)
 - **Alcance:** entrega 1 = Sprints 0–2 del plan `pms-reservas-plan-build.md`
 - **Hito M1:** *el sistema nunca vende dos veces la misma habitación* — garantizado
   por PostgreSQL y demostrado con 100 hilos.
+- **Roadmap:** ver «Siguientes fases del desarrollo»; las fases 0–D no están
+  implementadas todavía.
 
 ## En una frase
 
@@ -103,14 +106,156 @@ curl http://localhost:8080/health
 - El CI está escrito pero **no se ha ejecutado en GitHub** (repo local, sin
   remoto).
 
-## Siguiente paso propuesto
+## Siguientes fases del desarrollo
 
-1. `DisponibilidadService` + `GET /disponibilidad` (rango, tipo, tarifa) con
-   precios por noche y validación de las invariantes de RN-04.
-2. `ReservaService` + endpoints de crear/modificar/cancelar; mapear `23P01` a
-   `409 Conflict` y reutilizar `SinSolapamientoIT` como gate.
-3. Pantallas de reserva en Angular sobre `proxy.conf.json`.
-4. Sumar pruebas de invariantes a la matriz (hoy 2/45) para reducir la brecha.
+### Por qué hoy solo se ve "Salud del sistema"
+
+`app.routes.ts` declara una única pantalla (`'' → SaludComponent`) y el backend
+expone un único endpoint (`GET /health`). La base tiene el dominio completo
+(habitaciones, tarifas, precios, reservas), pero **no hay capa de aplicación que
+lo sirva por HTTP ni interfaz que lo muestre**. Es la consecuencia del alcance
+cerrado en la entrega 1: S0 completo + esquema y garantía de concurrencia de
+S1–S2, sin API de negocio.
+
+Las fases siguientes cubren esa brecha. Orden recomendado: **0 → A → B**, y
+después C y D en paralelo con el trabajo transversal.
+
+### Fase 0 — Fundaciones de aplicación (sin UI)
+
+- `JdbcClient` para consultas y escrituras; DTOs como `record` en
+  `com.hotel.pms.<dominio>`; nada de entidades JPA (ver decisión pendiente 1).
+- `GlobalExceptionHandler`: `SQLState 23P01` → `409 Conflict` con mensaje
+  utilizable; validación → `400` con detalle por campo; `404` explícito.
+- Convención de API: prefijo `/api`, JSON en español (`fechaEntrada`,
+  `precioTotal`), fechas ISO `YYYY-MM-DD`, importes `BigDecimal`, horas de la
+  propiedad en `America/Guayaquil`.
+- `spring-boot-starter-validation` y un test de contrato por endpoint.
+
+**Terminado cuando:** existe un endpoint trivial (`GET /api/propiedad`) con su
+test y el manejador de errores tiene prueba propia.
+
+### Fase A — S1: inventario y disponibilidad (solo lectura)
+
+Backend:
+
+- `GET /api/propiedad` — moneda, zona horaria, horas de check-in/out y hora
+  límite sin garantía.
+- `GET /api/habitaciones` — número, piso, tipo, estado de limpieza y
+  `fueraDeServicio`.
+- `GET /api/tarifas?desde=&hasta=` — plan, política de cancelación, estancia
+  mínima/máxima, cierre de llegada y vigencia.
+- `GET /api/disponibilidad?desde=&hasta=&tipo=` — por habitación libre: noches,
+  precio de cada noche, subtotal, impuestos y total.
+
+Reglas que debe respetar:
+
+- Libre = sin línea activa solapada (`daterange && daterange` sobre
+  `reserva_habitacion` con `estado_activo`) y `fuera_de_servicio = false`.
+- RN-04: si falta `precio_noche` para alguna noche, la respuesta lo declara
+  (`sinPrecio`) en lugar de inventar una tarifa.
+- Rango inválido (`desde >= hasta`) → `400`; estancia menor que
+  `estancia_minima` → se informa en la respuesta, no se oculta.
+
+Frontend:
+
+- Rutas nuevas: `'' → TableroComponent`, `/disponibilidad`, `/salud` (la sonda
+  deja de ser la portada).
+- Tablero: ocupación de hoy, habitaciones por estado de limpieza, llegadas y
+  salidas del día.
+- Disponibilidad: buscador de fechas y tipo; tabla de habitaciones libres con
+  desglose de precio y botón "Reservar" (aún inerte hasta la fase B).
+
+**Terminado cuando:** para un rango de 3 noches la pantalla muestra las
+habitaciones libres con el total correcto y un `DisponibilidadIT` cubre
+solapamiento, fechas contiguas, tipo sin precio y rango inválido.
+
+### Fase B — S2: reservas (M1 visible en pantalla)
+
+Backend:
+
+- `POST /api/reservas` — reserva + líneas en **una transacción**; total calculado
+  desde `precio_noche`; `codigo_confirmacion` de 8 caracteres con reintento ante
+  colisión.
+- `GET /api/reservas?desde=&hasta=&estado=`, `GET /api/reservas/{id}`.
+- `PATCH /api/reservas/{id}` — fechas o habitación; pasa otra vez por la
+  restricción de exclusión.
+- `POST /api/reservas/{id}/cancelar` — aplica `politica_cancelacion`
+  (horas límite, cargo por noches o porcentaje) y libera inventario.
+
+Reglas que debe respetar:
+
+- RN-01: la carrera la resuelve PostgreSQL; el servicio traduce `23P01` a `409`.
+- RN-09: descuento > 10 % exige `aprobacion_descuento` con porcentaje suficiente
+  y aprobador con `DESCUENTO_APROBAR`; si no, `400`.
+- RN-06: `SIN_GARANTIA` fija `hora_limite_llegada` a la hora límite de la
+  propiedad (18:00 por defecto).
+- RN-11/RN-12: `modificada_por` obligatorio y registro en `bitacora` (append-only)
+  en crear, modificar y cancelar.
+
+Frontend:
+
+- `/reservas`: lista con filtros por fecha y estado, y ficha de detalle.
+- Formulario de alta desde disponibilidad con la habitación preseleccionada.
+- Cancelación con confirmación y cargo estimado; el `409` se muestra como aviso
+  claro ("esa habitación ya está vendida en esas fechas").
+
+**Terminado cuando:** desde la UI se crea una reserva para la 101 y un segundo
+intento en las mismas fechas recibe `409` visible; `ReservaIT` cubre alta feliz,
+solape, descuento sin aprobación, sin garantía y cancelación con cargo.
+
+### Fase C — S3: estancia, folio y cobros
+
+- Check-in/check-out, cambios de estado de habitación y autorización de
+  supervisor (RN-07: solo `LIMPIA`/`INSPECCIONADA`), late check-out (RN-02).
+- Persistir las tablas ya modeladas: `estancia`, `folio`, `cargo`, `pago`
+  (pago simulado; sin pasarela).
+- UI: acciones de check-in/out desde la ficha de reserva y folio con cargos.
+
+**Terminado cuando:** el ciclo reserva → check-in → cargos → check-out se
+completa desde la interfaz y el folio cuadra con el total de la reserva.
+
+### Fase D — S6/S7: operación
+
+- Bloqueos de habitación (RN-01b) y grupos con cut-off (`minimoHabitaciones`).
+- Cierre del día (RN-11) y bloqueo de modificaciones retroactivas.
+- Retenciones de inventario con TTL de 10 minutos (CU-02) y job de liberación.
+- No-show nocturno (RN-08) y cargos automáticos.
+- Channel manager/OTA y pasarela de pago (integración, no construcción).
+- UI: tape chart arrastrable, cierre del día y panel de ocupación/ADR/RevPAR.
+
+### Trabajo transversal (desde el inicio de la fase B)
+
+- **Autenticación y permisos:** `rol`/`usuario` ya existen con permisos en BD;
+  falta sesión y autorización por permiso (`DESCUENTO_APROBAR`,
+  `EXCEPCION_CIERRE`, etc.). Varias invariantes dependen del rol, no del dato.
+- **Cobertura de invariantes:** hoy 2/45 con prueba automatizada. Objetivo ≥ 60 %
+  al cerrar B (todas las de reserva) y 100 % al cerrar C; la matriz lo refleja
+  sola.
+- **CI real:** crear remoto en GitHub y ejecutar el workflow (hoy escrito pero
+  nunca ejecutado).
+- **Migraciones:** todo cambio de esquema entra como `V3__...` en adelante.
+
+### Decisiones pendientes antes de la fase 0
+
+1. **Acceso a datos:** `JdbcClient` (recomendado, coherente con lo verificado y
+   con SQL explícito) vs JPA/Hibernate.
+2. **Portada:** mover la salud a `/salud` y usar el tablero como inicio
+   (recomendado) vs dejar la salud como portada.
+3. **Seed de demo:** migración `V3` con reservas de los próximos días para que el
+   tablero no salga vacío (recomendado) vs mantener el seed sin reservas.
+4. **Autenticación en B:** Spring Security con JWT vs usuario de sesión simulado
+   mientras se construye la UI.
+
+### Riesgos a vigilar en estas fases
+
+- Noches sin `precio_noche` fuera de 2026: el seed solo cubre ese año.
+- Colisiones de `codigo_confirmacion` (8 caracteres) bajo carga: reintentar.
+- Escribir directo en `reserva_habitacion` sin pasar por el trigger de
+  `estado_activo` deja líneas activas fantasma.
+- Cancelar una reserva `EN_CASA` con cargo: definir si se permite y con qué
+  permiso antes de implementarlo.
+- Los IT se desactivan en silencio sin PostgreSQL: revisar `Skipped: 0`.
+
 
 ## Bitácora de la última sesión
 
